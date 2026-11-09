@@ -1,6 +1,7 @@
 from pico2d import *
 import game_framework
 import game_world
+import item_mode
 import pause_mode
 import title_mode
 from boy import Boy
@@ -25,6 +26,8 @@ def handle_events(event_list=None):
             game_framework.push_mode(pause_mode)
             pause_mode.handle_events(event_list[index + 1:])
             return
+        elif item_mode.handle_event(event, boy):
+            continue
         else:
             boy.handle_event(event)
 
@@ -39,6 +42,7 @@ def init():
 
     grass = Grass()
     game_world.add_oject(grass, 0)
+    item_mode.init()
 
 
 
@@ -49,6 +53,7 @@ def update():
 def render():
     clear_canvas()
     game_world.render()
+    item_mode.render(boy)
     update_canvas()
 
 def pause():
@@ -69,6 +74,7 @@ def resume():
 def finish():
     global boy, pause_started_at
     game_world.clear()
+    item_mode.finish()
     boy = None
     pause_started_at = None
     paused_key_events.clear()
